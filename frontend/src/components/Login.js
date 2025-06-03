@@ -4,7 +4,7 @@ import axios from 'axios';
 import { EnvelopeIcon, LockClosedIcon } from '@heroicons/react/24/solid';
 import './Login.css';
 
-function Login() {
+function Login({ onClose,  onRegisterClick}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -31,8 +31,9 @@ function Login() {
   };
 
   return (
-    <div className="login-container">
+    <div className="login-overlay">
       <div className="login-form">
+        <button className="close-btn" onClick={onClose}>✖</button>
         <h2 className="login-title">Đăng Nhập</h2>
         {error && <p className="error-message">{error}</p>}
         <form onSubmit={handleLogin} className="login-form-content">
@@ -79,7 +80,7 @@ function Login() {
           </button>
         </form>
         <p className="login-footer">
-          Chưa có tài khoản? <a href="/register" className="footer-link">Đăng ký ngay</a>
+          Chưa có tài khoản? <button onClick={() => {onClose(); onRegisterClick()}} className="register-btn">Đăng Ký</button>
         </p>
       </div>
     </div>

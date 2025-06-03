@@ -1,27 +1,31 @@
 .home-container {
   max-width: 1140px;
-  margin: 2rem auto;
-  padding: 1rem;
+  margin: 1rem auto;
+  padding: 0 1rem 1rem 1rem;
 }
 
 .home-title {
   font-size: 1.875rem;
   font-weight: bold;
   margin-bottom: 1rem;
-  color: #1f2937;
+  color: #02485a;
+  text-align: center;
 }
 
 .home-message {
+  font-size: 1.1rem;
+  color: #02485a;
+  text-align: center;
+  margin: 0 0 3rem 0;
+}
+
+.home-message button {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none;
+  color: #043fa4;
   font-size: 1rem;
-  color: #4b5563;
 }
-
-.home-link {
-  color: #2563eb;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.home-link:hover {
+.home-message button:hover {
   text-decoration: underline;
 }

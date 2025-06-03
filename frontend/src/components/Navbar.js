@@ -1,22 +1,28 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import './Navbar.css';
-
-function Navbar() {
+import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+function Navbar({ onLoginClick, onRegisterClick }) {
   const user = JSON.parse(localStorage.getItem('user'));
-
+  const navigate = useNavigate();
+  const goHome = () => {
+    navigate('/');
+  };
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    window.location.href = '/login';
+    window.location.reload(); 
   };
 
   return (
     <nav className="navbar">
       <div className="navbar-content">
-        <Link to="/" className="navbar-brand">Hiệu Sách Online</Link>
+        <Link to="/" className="navbar-brand">
+          <img className="image-logo" src="logo.png" alt="logo" />
+          <p>Hiệu Sách Online</p>
+        </Link>
         <div className="navbar-links">
-          <Link to="/" className="navbar-link">Trang Chủ</Link>
+          <button onClick={goHome} className="navbar-link">Trang Chủ</button>
           {user ? (
             <>
               <span className="navbar-user">Xin Chào, {user.name}</span>
@@ -24,8 +30,8 @@ function Navbar() {
             </>
           ) : (
             <>
-              <Link to="/login" className="navbar-link">Đăng Nhập</Link>
-              <Link to="/register" className="navbar-link">Đăng Ký</Link>
+              <button onClick={onLoginClick} className="navbar-link">Đăng Nhập</button>
+              <button onClick={onRegisterClick} className="navbar-link">Đăng Ký</button>
             </>
           )}
         </div>

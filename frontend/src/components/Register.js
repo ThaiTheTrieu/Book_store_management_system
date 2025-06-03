@@ -4,7 +4,7 @@ import axios from 'axios';
 import { UserIcon, EnvelopeIcon, LockClosedIcon, PhoneIcon } from '@heroicons/react/24/solid';
 import './Register.css';
 
-function Register() {
+function Register( {onClose, onLoginClick} ) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState(''); // Thêm state cho số điện thoại
@@ -26,15 +26,16 @@ function Register() {
       alert('Dang ky thanh cong! Vui long dang nhap.');
       navigate('/login');
     } catch (err) {
-      setError(err.response?.data?.message || 'Loi dang ky!');
+      setError(err.response?.data?.message || 'Lỗi đăng ký!');
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="login-container">
+    <div className="login-overlay">
       <div className="login-form">
+        <button className="close-btn" onClick={onClose}>✖</button>
         <h2 className="login-title">Đăng Ký</h2>
         {error && <p className="error-message">{error}</p>}
         <form onSubmit={handleRegister} className="login-form-content">
@@ -111,7 +112,7 @@ function Register() {
           </button>
         </form>
         <p className="login-footer">
-          Đã có tài khoản? <a href="/login" className="footer-link">Đăng nhập ngay</a>
+          Đã có tài khoản? <button onClick={() => {onClose(); onLoginClick()}} className="login-btn">Đăng Nhập</button>
         </p>
       </div>
     </div>

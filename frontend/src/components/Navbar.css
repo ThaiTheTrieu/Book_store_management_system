@@ -1,6 +1,9 @@
 .navbar {
   background-color: #1e40af;
   padding: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .navbar-content {
@@ -12,12 +15,18 @@
 }
 
 .navbar-brand {
+  display: flex;
+  align-items: center;
   color: white;
   font-size: 1.25rem;
   font-weight: bold;
   text-decoration: none;
 }
-
+.image-logo {
+  margin-right: 0.5rem;
+    width: 30px;
+    height: 40px;
+}
 .navbar-links {
   display: flex;
   gap: 1rem;
@@ -49,4 +58,9 @@
 
 .logout:hover {
   text-decoration: underline;
+}
+.navbar button {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none;
 }
