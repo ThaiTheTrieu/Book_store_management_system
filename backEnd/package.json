@@ -1,0 +1,22 @@
+{
+  "name": "book-store-management-system",
+  "version": "1.0.0",
+  "description": "build back end of book store management system with nodejs",
+  "license": "ISC",
+  "author": "Thai_Trieu",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": " nodemon --inspect index",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
