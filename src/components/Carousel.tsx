@@ -1,8 +1,8 @@
 import { transform } from "next/dist/build/swc";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaArrowCircleLeft, FaArrowCircleRight } from "react-icons/fa";
 
-type Screen = 'desktop' | 'tabplet' | ''
+type Screen = 'desktop' | 'tablet' | 'mobile'
 
 type CarouselProps<T> = {
     items: T[];
@@ -14,6 +14,15 @@ type CarouselProps<T> = {
     autoPlay?: boolean;
     interval?: number;
     showArrow?: boolean;
+    responesive?: { screen: Screen, slidesToShow: number }[]
+}
+
+function getCurrentScreen<Screen>() {
+    if (window.innerWidth >= 1024)
+        return 'desktop';
+    else if (window.innerWidth >= 640)
+        return 'tablet';
+    return 'mobile';
 }
 
 function Carousel<T>({
@@ -24,27 +33,32 @@ function Carousel<T>({
     slideToShow = 1,
     gap = 0,
     autoPlay = true,
-    interval = 6000,
+    interval = 3000,
     showArrow = true,
+    responesive
 }: CarouselProps<T>) {
     // component state 
     const [currentIndex, setCurrentIndex] = useState(0);
     const [transitioning, setTransitioning] = useState(true)
+    const [screen, setScreen] = useState<Screen>('desktop');
+    const isAnimating = useRef<boolean>(false)
 
-
-    const perView = Math.min(slideToShow > 0 ? slideToShow : 1, Math.max(1, items.length))
+    const responesiveSlides = responesive?.find(config => config.screen == screen)?.slidesToShow || slideToShow;
+    const perView = Math.min(responesiveSlides > 0 ? responesiveSlides : 1, Math.max(1, items.length))
     const slides = [...items, ...items.slice(0, perView)]
 
     const basis = `calc((100% - ${(perView - 1) * gap}px) / ${perView})`
     const translate = `translateX(calc(-${currentIndex} * (100% + ${gap}px) / ${perView}  ))`
 
     const goNext = () => {
-        if (currentIndex === items.length) {
-            setTransitioning(false)
-            setCurrentIndex(0)
-            return
-        }
-        setCurrentIndex(prev => prev + 1)
+        if (isAnimating.current) return;
+
+        isAnimating.current = true
+        setTransitioning(true);
+        setCurrentIndex(prev => Math.min(prev + 1, items.length))
+        // setTimeout(() => {
+        //     isAnimating.current = false;
+        // }, 500);
     }
 
     const goPrevious = () => {
@@ -53,17 +67,29 @@ function Carousel<T>({
             setCurrentIndex(items.length)
             requestAnimationFrame(() => {
                 requestAnimationFrame(() => {
+                    isAnimating.current = true;
                     setTransitioning(true);
                     setCurrentIndex(items.length - 1);
                 });
             });
+            // setTimeout(() => {
+            //     isAnimating.current = false;
+            // }, 500);
             return
         }
+        isAnimating.current = true;
         setTransitioning(true);
         setCurrentIndex(prev => prev - 1);
+        // setTimeout(() => {
+        //     isAnimating.current = false;
+        // }, 500);
+
     }
 
-    const handleTransiotionEnd = () => {
+    const handleTransiotionEnd = (e: React.TransitionEvent<HTMLDivElement>) => {
+        if (e.target !== e.currentTarget) return
+
+        isAnimating.current = false;
         if (currentIndex === items.length) {
             setTransitioning(false);
             setCurrentIndex(0)
@@ -71,20 +97,36 @@ function Carousel<T>({
     }
 
     useEffect(() => {
+        const updateScreen = () => {
+            setScreen(getCurrentScreen())
+        }
+        updateScreen();
+        window.addEventListener("resize", updateScreen)
+        return () => window.removeEventListener('resize', updateScreen)
+    }, [])
+
+    useEffect(() => {
         if (!transitioning) {
-            const frame = requestAnimationFrame(() => {
-                setTransitioning(true);
+            let frame2 = 0;
+            const frame1 = requestAnimationFrame(() => {
+                frame2 = requestAnimationFrame(() => {
+                    setTransitioning(true);
+                })
             })
-            return () => cancelAnimationFrame(frame)
+            return () => { cancelAnimationFrame(frame1); cancelAnimationFrame(frame2) }
         };
     }, [transitioning])
 
     useEffect(() => {
+        if (!autoPlay || isAnimating.current)
+            return;
+        isAnimating.current = true;
         const timer = setInterval(() => {
-            setCurrentIndex(prev => prev + 1)
+            setTransitioning(true);
+            setCurrentIndex(prev => Math.min(prev + 1, items.length));
         }, interval);
         return () => clearInterval(timer)
-    }, [autoPlay])
+    }, [autoPlay, interval, items.length])
 
     return (
 

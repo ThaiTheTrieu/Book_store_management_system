@@ -41,13 +41,17 @@ function page() {
           ))}
         </div>
       </div> */}
-        <Carousel items={items} slideToShow={3} gap={10} 
-        className='p-2 bg-gray-200 rounded-2xl mx-2'
-          renderItems={
-            (item) => <img src={item.url} alt={item.title} className='w-full aspect-video rounded-lg' />
-          } 
-          // showArrow={false}
-          />
+      <Carousel items={items} slideToShow={3} gap={10}
+        className='w-1/3 p-2 bg-gray-200 rounded-2xl mx-2'
+        renderItems={
+          (item) => <img src={item.url} alt={item.title} className='w-full aspect-[2/3] rounded-lg' />
+        }
+        // showArrow={false}
+        responesive={[
+          { screen: 'tablet', slidesToShow: 2 },
+          { screen: 'mobile', slidesToShow: 1 }
+        ]}
+      />
     </div>
   )
 }
